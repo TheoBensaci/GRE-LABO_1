@@ -14,57 +14,57 @@ public final class DfsGenerator implements MazeGenerator {
   public void generate(MazeBuilder builder, int from) {
     Graph g = builder.topology();
     List<Boolean> visited = new ArrayList<>(Collections.nCopies(g.nbVertices(), false));
-    Stack<Integer> buffer = new Stack<>();
+    Deque<Integer> buffer = new ArrayDeque<>(g.nbVertices());
 
     // add start point
-    buffer.push(0);
+    buffer.push(from);
 
-    while (!buffer.empty()){
+    while (!buffer.isEmpty()){
 
       int i = buffer.peek();
 
       if(visited.get(i)){
         // mark the vertex as finish
+        builder.progressions().setLabel(i,Progression.PROCESSED);
         buffer.pop();
+        continue;
       }
 
+
+
+      builder.progressions().setLabel(i,Progression.PROCESSING);
+
+
+
       // get neighbors
-      //List<Integer> neighbors = g.neighbors(i); //Arrays.asList(g.neighbors(i).);
+      int[] neighbors= g.neighbors(i);
 
       // peek random neighbor
-      int j;
-      do {
-        j = (int) (Math.random() * neighbors.length);
+      int index_neighbor=(int) (Math.random() * neighbors.length);
+      int j = 0;
+      for (; visited.get(neighbors[index_neighbor]) && j < neighbors.length; j++) {
+        index_neighbor=(index_neighbor+1)%neighbors.length;
       }
-      while();
-
-
-      // destroy the wall
-
 
       // mark i as visited
+      visited.set(i,true);
 
-
-
-
-    }
-
-    for (int i = 0; i < g.nbVertices(); i++) {
-      // get neighbors
-      int[] neighbors = g.neighbors(i);
-
-      // peek random neighbor
-
+      if(j==neighbors.length){
+        // no avaliable neighbor
+        builder.progressions().setLabel(i,Progression.PROCESSED);
+        buffer.pop();
+        if(!buffer.isEmpty())visited.set(buffer.peek(),false);
+        continue;
+      }
 
       // destroy the wall
+      builder.removeWall(i,neighbors[index_neighbor]);
 
+      // add target to the stack
+      buffer.push(neighbors[index_neighbor]);
 
-      // mark i as visited
-
-      //
-
+      builder.progressions().setLabel(neighbors[index_neighbor],Progression.PROCESSING);
     }
-    System.out.println("test");
     // Mise à jour de l'interface graphique :
     // builder.progressions().setLabel(..., ...);
   }
