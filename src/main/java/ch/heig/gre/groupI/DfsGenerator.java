@@ -1,7 +1,6 @@
-package ch.heig.gre.groupX;
+package ch.heig.gre.groupI;
 
 import ch.heig.gre.graph.Graph;
-import ch.heig.gre.graph.VertexLabelling;
 import ch.heig.gre.maze.MazeBuilder;
 import ch.heig.gre.maze.MazeGenerator;
 import ch.heig.gre.maze.Progression;
@@ -13,28 +12,21 @@ public final class DfsGenerator implements MazeGenerator {
   @Override
   public void generate(MazeBuilder builder, int from) {
     Graph g = builder.topology();
-    List<Boolean> visited = new ArrayList<>(Collections.nCopies(g.nbVertices(), false));
-    Deque<Integer> buffer = new ArrayDeque<>(g.nbVertices());
+    List<Boolean> visited = new ArrayList<>(Collections.nCopies(g.nbVertices(), false));    // array of bool use to track if a vertex as been all ready visited
+    Deque<Integer> buffer = new ArrayDeque<>(g.nbVertices());                                  // buffer use to know witch vertex is to be treated next
 
     // add start point
     buffer.push(from);
 
     while (!buffer.isEmpty()){
-
+      // get the buffer head
       int i = buffer.peek();
 
-      if(visited.get(i)){
-        // mark the vertex as finish
-        builder.progressions().setLabel(i,Progression.PROCESSED);
-        buffer.pop();
-        continue;
-      }
+      // mark i as visited
+      visited.set(i,true);
 
-
-
+      // update UI
       builder.progressions().setLabel(i,Progression.PROCESSING);
-
-
 
       // get neighbors
       int[] neighbors= g.neighbors(i);
@@ -46,14 +38,10 @@ public final class DfsGenerator implements MazeGenerator {
         index_neighbor=(index_neighbor+1)%neighbors.length;
       }
 
-      // mark i as visited
-      visited.set(i,true);
-
+      //if no available neighbor => vertex is done and we need to back track
       if(j==neighbors.length){
-        // no avaliable neighbor
         builder.progressions().setLabel(i,Progression.PROCESSED);
         buffer.pop();
-        if(!buffer.isEmpty())visited.set(buffer.peek(),false);
         continue;
       }
 
@@ -63,9 +51,8 @@ public final class DfsGenerator implements MazeGenerator {
       // add target to the stack
       buffer.push(neighbors[index_neighbor]);
 
+      // update UI
       builder.progressions().setLabel(neighbors[index_neighbor],Progression.PROCESSING);
     }
-    // Mise à jour de l'interface graphique :
-    // builder.progressions().setLabel(..., ...);
   }
 }

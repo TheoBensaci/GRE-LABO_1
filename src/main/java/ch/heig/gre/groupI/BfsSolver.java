@@ -1,4 +1,4 @@
-package ch.heig.gre.groupX;
+package ch.heig.gre.groupI;
 
 import ch.heig.gre.Keys;
 import ch.heig.gre.graph.Graph;
@@ -7,7 +7,6 @@ import ch.heig.gre.graph.PositiveWeightFunction;
 import ch.heig.gre.graph.VertexLabelling;
 import ch.heig.gre.maze.MazeSolver;
 import ch.heig.gre.maze.Metadata;
-import ch.heig.gre.maze.Progression;
 
 import java.util.*;
 
@@ -27,47 +26,59 @@ public final class BfsSolver implements MazeSolver {
     List<Integer> n_alt_path = new ArrayList<>(Collections.nCopies(graph.nbVertices(), 0));           // record the number of alt path possible to reach this vertex
     Queue<Integer> buffer = new ArrayDeque<>(graph.nbVertices());                                        // buffer use as a fifo
 
-
+    // add the source
     buffer.add(source);
     vertex_distance.set(source,0);
     distances.setLabel(source, 0);
 
     while (!buffer.isEmpty()){
+
+      // get a vertex
       int i = buffer.poll();
+
+      // pre-compute distance of hes children
       int next_distance = vertex_distance.get(i)+1;
 
-
+      // if vertex = destination => found
       if(i==destination){
         // found
         break;
       }
 
+      // get neighbors
       int[] neighbors= graph.neighbors(i);
+
       for (int neighbor : neighbors) {
-          if (vertex_distance.get(neighbor)<0) {
-            // add vertex to visited
-            buffer.add(neighbor);
 
-            // set parent as the actual vertex
-            parent.set(neighbor, i);
+        // if vertex distance is greater than 0 => vertex all ready visited
+        if (vertex_distance.get(neighbor)<0) {
+          // add vertex to the buffer
+          buffer.add(neighbor);
 
-            vertex_distance.set(neighbor,next_distance);
+          // set parent as the actual vertex
+          parent.set(neighbor, i);
 
-            distances.setLabel(neighbor, next_distance);
-          }
-          else if(vertex_distance.get(neighbor)==next_distance){
-            // if the vertex as been reach before and the distance is the same
-            // there for, a alternate path is possible
-            n_alt_path.set(neighbor,n_alt_path.get(neighbor)+1);
-          }
+          // set the vertex distance
+          vertex_distance.set(neighbor,next_distance);
+
+          // update UI
+          distances.setLabel(neighbor, next_distance);
         }
+        else if(vertex_distance.get(neighbor)==next_distance){
+          // if the vertex as been reach before and the distance is the same
+          // there for, a alternate path is possible
+          n_alt_path.set(neighbor,n_alt_path.get(neighbor)+1);
+        }
+      }
     }
 
-    // get path
+    // recover the path
     int path_length = vertex_distance.get(destination)+1;
     List<Integer> path = new ArrayList<>(Collections.nCopies(path_length, -1));
-    long alt_path=0;
+
+    long alt_path=0;          // number of alternative path
     int v = destination;
+
     for (int j = path_length-1; j >= 0; j--) {
       path.set(j,v);
       // we add the number of alt path of every node use in the path to know how many alt was possible
