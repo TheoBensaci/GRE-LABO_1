@@ -21,10 +21,17 @@ public final class BfsSolver implements MazeSolver {
 
   public Result solve(Graph graph, int source, int destination, VertexLabelling<Integer> distances) {
 
-    List<Integer> parent = new ArrayList<>(Collections.nCopies(graph.nbVertices(), -1));              // record parents of vertex
-    List<Integer> vertex_distance = new ArrayList<>(Collections.nCopies(graph.nbVertices(), -1));     // record distances of vertex from source
-    List<Integer> n_alt_path = new ArrayList<>(Collections.nCopies(graph.nbVertices(), 0));           // record the number of alt path possible to reach this vertex
+    List<Integer> parent = new ArrayList<>(graph.nbVertices());              // record parents of vertex
+    List<Integer> vertex_distance = new ArrayList<>(graph.nbVertices());     // record distances of vertex from source
+    List<Integer> n_alt_path = new ArrayList<>(graph.nbVertices());           // record the number of alt path possible to reach this vertex
     Queue<Integer> buffer = new ArrayDeque<>(graph.nbVertices());                                        // buffer use as a fifo
+
+    // init datas
+    for (int i = 0; i < graph.nbVertices(); i++) {
+      parent.add(-1);
+      vertex_distance.add(-1);
+      vertex_distance.add(0);
+    }
 
     // add the source
     buffer.add(source);
@@ -78,7 +85,6 @@ public final class BfsSolver implements MazeSolver {
 
     long alt_path=0;          // number of alternative path
     int v = destination;
-
     for (int j = path_length-1; j >= 0; j--) {
       path.set(j,v);
       // we add the number of alt path of every node use in the path to know how many alt was possible

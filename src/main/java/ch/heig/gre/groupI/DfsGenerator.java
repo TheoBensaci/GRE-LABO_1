@@ -12,8 +12,13 @@ public final class DfsGenerator implements MazeGenerator {
   @Override
   public void generate(MazeBuilder builder, int from) {
     Graph g = builder.topology();
-    List<Boolean> visited = new ArrayList<>(Collections.nCopies(g.nbVertices(), false));    // array of bool use to track if a vertex as been all ready visited
+    List<Boolean> visited = new ArrayList<>(g.nbVertices());    // array of bool use to track if a vertex as been all ready visited
     Deque<Integer> buffer = new ArrayDeque<>(g.nbVertices());                                  // buffer use to know witch vertex is to be treated next
+
+    // init data
+    for (int i = 0; i < g.nbVertices(); i++) {
+      visited.add(false);
+    }
 
     // add start point
     buffer.push(from);
