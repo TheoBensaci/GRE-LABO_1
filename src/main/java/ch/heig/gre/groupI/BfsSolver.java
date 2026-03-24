@@ -30,7 +30,7 @@ public final class BfsSolver implements MazeSolver {
     for (int i = 0; i < graph.nbVertices(); i++) {
       parent.add(-1);
       vertex_distance.add(-1);
-      vertex_distance.add(0);
+      n_alt_path.add(0);
     }
 
     // add the source
