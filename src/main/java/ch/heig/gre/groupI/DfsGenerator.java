@@ -1,10 +1,15 @@
+/**
+ *   Autheur: Theo Bensaci, Thomas Nguyen
+ *   Date: 11:40 05.03.2026
+ *   Description: maze generator
+ */
+
 package ch.heig.gre.groupI;
 
 import ch.heig.gre.graph.Graph;
 import ch.heig.gre.maze.MazeBuilder;
 import ch.heig.gre.maze.MazeGenerator;
 import ch.heig.gre.maze.Progression;
-
 import java.util.*;
 
 // TODO : classe à compléter et documenter

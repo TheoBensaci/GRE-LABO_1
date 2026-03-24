@@ -1,3 +1,9 @@
+/**
+ *   Autheur: Theo Bensaci, Thomas Nguyen
+ *   Date: 11:40 05.03.2026
+ *   Description: maze solver
+ */
+
 package ch.heig.gre.groupI;
 
 import ch.heig.gre.Keys;
@@ -7,7 +13,6 @@ import ch.heig.gre.graph.PositiveWeightFunction;
 import ch.heig.gre.graph.VertexLabelling;
 import ch.heig.gre.maze.MazeSolver;
 import ch.heig.gre.maze.Metadata;
-
 import java.util.*;
 
 // TODO : compléter cette classe et documenter. Voir documentation de l'interface MazeSolver et des classes associées
